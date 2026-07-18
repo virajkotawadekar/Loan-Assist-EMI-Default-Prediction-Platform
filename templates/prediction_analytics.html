@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Prediction Analytics | LoanAssist</title>
+
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<link rel="stylesheet"
+      href="{{ url_for('static', filename='css/prediction_analytics.css') }}">
+
+</head>
+
+<body>
+
+
+<!-- ================= Sidebar ================= -->
+
+<div class="col-lg-2 sidebar">
+
+    <h3 class="logo">
+    <i class="bi bi-graph-up-arrow"></i>
+    LoanAssist
+   </h3>
+
+    <a href="{{ url_for('dashboard') }}">
+    <i class="bi bi-house-fill"></i>
+    Dashboard
+</a>
+
+<a href="{{ url_for('predict') }}">
+    <i class="bi bi-cpu-fill"></i>
+    Predict
+</a>
+
+<a href="{{ url_for('analytics') }}">
+    <i class="bi bi-pie-chart-fill"></i>
+    Analytics
+</a>
+
+<a href="{{ url_for('customers') }}">
+    <i class="bi bi-people-fill"></i>
+    Customers
+</a>
+
+<a href="{{ url_for('prediction_analytics') }}" class="active">
+    <i class="bi bi-bar-chart-fill"></i>
+    Prediction Analytics
+</a>
+
+<a href="{{ url_for('logout') }}">
+    <i class="bi bi-box-arrow-right"></i>
+    Logout
+</a>
+
+</div>
+
+
+<div class="main-content">
+
+<div class="topbar">
+
+<div>
+
+<h2>
+<i class="bi bi-bar-chart-line-fill text-primary"></i>
+Prediction Analytics
+</h2>
+
+<p class="text-muted">
+EMI Default Prediction Statistics
+</p>
+
+</div>
+
+<a href="{{ url_for('dashboard') }}"
+class="btn btn-dark">
+
+<i class="bi bi-arrow-left-circle-fill"></i>
+Back To Dashboard
+
+</a>
+
+</div>
+
+<div class="row">
+
+<div class="col-md-3 mb-4">
+<div class="stats-card total-card">
+
+<h6>Total Predictions</h6>
+
+<h2>{{ total_predictions }}</h2>
+
+<i class="bi bi-file-earmark-bar-graph-fill"></i>
+
+</div>
+</div>
+
+<div class="col-md-3 mb-4">
+<div class="stats-card low-card">
+
+<h6>Low Risk</h6>
+
+<h2>{{ low_risk }}</h2>
+
+<i class="bi bi-shield-check"></i>
+
+</div>
+</div>
+
+<div class="col-md-3 mb-4">
+<div class="stats-card medium-card">
+
+<h6>Medium Risk</h6>
+
+<h2>{{ medium_risk }}</h2>
+
+<i class="bi bi-exclamation-triangle-fill"></i>
+
+</div>
+</div>
+
+<div class="col-md-3 mb-4">
+<div class="stats-card high-card">
+
+<h6>High Risk</h6>
+
+<h2>{{ high_prediction }}</h2>
+
+<i class="bi bi-x-octagon-fill"></i>
+
+</div>
+</div>
+
+</div>
+
+<div class="row">
+
+<div class="col-lg-4 mb-4">
+
+<div class="card p-4">
+<i class="bi bi-pie-chart-fill"></i>
+<h5>Risk Distribution</h5>
+
+<canvas id="pieChart"></canvas>
+
+</div>
+
+</div>
+
+<div class="col-lg-8 mb-4">
+
+<div class="card p-4">
+<i class="bi bi-graph-up-arrow"></i>
+<h5>Prediction Trend</h5>
+
+<canvas id="lineChart"></canvas>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card p-4 mt-3">
+<i class="bi bi-bar-chart-fill"></i>
+<h5>Risk Category Analysis</h5>
+
+<canvas id="barChart"></canvas>
+
+</div>
+
+</div>
+
+<script>
+
+const lowRisk={{low_risk}};
+const mediumRisk={{medium_risk}};
+const highRisk={{high_prediction}};
+const predictionHistory={{prediction_history|tojson}};
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+new Chart(document.getElementById("pieChart"),{
+
+type:"pie",
+
+data:{
+
+labels:["Safe","High Risk"],
+
+datasets:[{
+
+data:[{{safe_count}},highRisk],
+
+backgroundColor:["#22c55e","#ef4444"]
+
+}]
+
+}
+
+});
+
+new Chart(document.getElementById("lineChart"),{
+
+type:"line",
+
+data:{
+
+labels:predictionHistory,
+
+datasets:[{
+
+label:"Predictions",
+
+data:predictionHistory.map((_,i)=>i+1),
+
+borderColor:"#4f46e5",
+
+backgroundColor:"rgba(79,70,229,.2)",
+
+fill:true,
+
+tension:.4
+
+}]
+
+}
+
+});
+
+new Chart(document.getElementById("barChart"),{
+
+type:"bar",
+
+data:{
+
+labels:["Low Risk","Medium Risk","High Risk"],
+
+datasets:[{
+
+label:"Customers",
+
+data:[lowRisk,mediumRisk,highRisk],
+
+backgroundColor:["#22c55e","#f59e0b","#ef4444"]
+
+}]
+
+}
+
+});
+
+</script>
+
+</body>
+</html>

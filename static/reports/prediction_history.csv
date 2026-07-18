@@ -1,0 +1,11 @@
+date,prediction,risk,default_probability,paid_probability
+12-07-2026 22:11,Default Risk,Medium Risk,60.37%,39.63%
+13-07-2026 20:27,Default Risk,Medium Risk,61.65%,38.35%
+13-07-2026 20:27,Default Risk,Medium Risk,61.65%,38.35%
+13-07-2026 20:29,Loan Will Be Paid,Low Risk,35.57%,64.43%
+13-07-2026 22:39,Loan Will Be Paid,Medium Risk,43.03%,56.97%
+14-07-2026 21:43,Loan Will Be Paid,Medium Risk,47.96%,52.04%
+14-07-2026 21:44,Loan Will Be Paid,Medium Risk,42.38%,57.62%
+14-07-2026 21:55,Default Risk,High Risk,88.51%,11.49%
+17-07-2026 20:00,Loan Will Be Paid,Medium Risk,45.62%,54.38%
+17-07-2026 22:17,Default Risk,High Risk,89.87%,10.13%

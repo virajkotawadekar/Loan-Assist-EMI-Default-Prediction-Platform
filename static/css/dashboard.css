@@ -1,0 +1,369 @@
+/* ===========================
+   GOOGLE FONT
+=========================== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    background:#f4f7fb;
+    overflow-x:hidden;
+}
+
+
+/* ===========================
+   SIDEBAR
+=========================== */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background:#111827;
+    padding:30px 20px;
+    overflow-y:auto;
+    z-index:999;
+}
+
+.logo{
+    color:#fff;
+    font-size:28px;
+    font-weight:700;
+    margin-bottom:40px;
+}
+
+.logo i{
+    color:#4f8cff;
+    margin-right:8px;
+}
+
+.sidebar a{
+    display:block;
+    color:#d1d5db;
+    text-decoration:none;
+    padding:14px 18px;
+    margin-bottom:10px;
+    border-radius:12px;
+    transition:.3s;
+    font-weight:500;
+}
+
+.sidebar a i{
+    margin-right:12px;
+}
+
+.sidebar a:hover,
+.sidebar a.active{
+    background:#2563eb;
+    color:#fff;
+}
+
+/* ===========================
+      MAIN CONTENT
+=========================== */
+
+.main-content{
+    margin-left:250px;
+    padding:35px;
+}
+
+/* ===========================
+        TOPBAR
+=========================== */
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.topbar h2{
+    font-weight:700;
+    color:#0f172a;
+}
+
+.topbar p{
+    color:#64748b;
+    margin-top:5px;
+}
+
+.topbar-right{
+    display:flex;
+    align-items:center;
+    gap:18px;
+}
+
+/* Search */
+
+.search-box{
+    background:#fff;
+    display:flex;
+    align-items:center;
+    border-radius:40px;
+    padding:10px 18px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.search-box i{
+    color:#64748b;
+    margin-right:10px;
+}
+
+.search-box input{
+    border:none;
+    outline:none;
+    background:transparent;
+    width:220px;
+}
+
+/* Top Icons */
+
+.top-icon{
+    width:48px;
+    height:48px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:50%;
+    color:#fff;
+    text-decoration:none;
+    transition:.3s;
+}
+
+.csv-btn{
+    background:#16a34a;
+}
+
+.pdf-btn{
+    background:#dc2626;
+}
+
+.top-icon:hover{
+    transform:translateY(-4px);
+    color:#fff;
+}
+
+.profile-box{
+    width:50px;
+    height:50px;
+    border-radius:50%;
+    background:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+}
+
+.profile-box i{
+    font-size:32px;
+    color:#2563eb;
+}
+
+/* ===========================
+        KPI CARDS
+=========================== */
+
+.stats-card{
+    background:#fff;
+    border-radius:18px;
+    padding:25px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+    transition:.35s;
+    height:140px;
+}
+
+.stats-card:hover{
+    transform:translateY(-8px);
+}
+
+.stats-card h6{
+    color:#64748b;
+    font-size:15px;
+    margin-bottom:8px;
+}
+
+.stats-card h2{
+    font-size:30px;
+    font-weight:700;
+    color:#0f172a;
+}
+
+.stats-card i{
+    font-size:45px;
+}
+
+/* Card Colors */
+
+.customers-card i{
+    color:#2563eb;
+}
+
+.risk-card i{
+    color:#dc2626;
+}
+
+.avg-card i{
+    color:#f59e0b;
+}
+
+.accuracy-card i{
+    color:#14b8a6;
+}
+
+.precision-card i{
+    color:#7c3aed;
+}
+
+.recall-card i{
+    color:#0891b2;
+}
+
+.f1-card i{
+    color:#ea580c;
+}
+
+.prediction-card i{
+    color:#0f766e;
+}
+
+/* ===========================
+        CARDS
+=========================== */
+
+.card{
+    border:none;
+    border-radius:18px;
+    box-shadow:0 8px 25px rgba(0,0,0,.08);
+}
+
+.card h4{
+    font-weight:700;
+    color:#0f172a;
+}
+
+/* ===========================
+      TABLE
+=========================== */
+
+.table{
+    vertical-align:middle;
+}
+
+.table thead{
+    background:#1e293b;
+    color:#fff;
+}
+
+.table-hover tbody tr:hover{
+    background:#f8fafc;
+}
+
+/* ===========================
+      BADGES
+=========================== */
+
+.badge{
+    padding:8px 14px;
+    font-size:13px;
+    border-radius:30px;
+}
+
+/* ===========================
+     AI ALERTS
+=========================== */
+
+.alert{
+    border:none;
+    border-radius:12px;
+    font-size:15px;
+}
+
+.alert i{
+    margin-right:8px;
+}
+
+/* ===========================
+ LIST GROUP
+=========================== */
+
+.list-group-item{
+    border:none;
+    padding:15px;
+    border-bottom:1px solid #eee;
+}
+
+.list-group-item:last-child{
+    border-bottom:none;
+}
+
+/* ===========================
+ FOOTER
+=========================== */
+
+footer{
+    color:#64748b;
+    font-size:14px;
+}
+
+footer i{
+    color:#16a34a;
+}
+
+/* ===========================
+ RESPONSIVE
+=========================== */
+
+@media(max-width:992px){
+
+.sidebar{
+    position:relative;
+    width:100%;
+    min-height:auto;
+}
+
+.main-content{
+    margin-left:0;
+}
+
+.topbar{
+    flex-direction:column;
+    gap:20px;
+    align-items:flex-start;
+}
+
+.topbar-right{
+    flex-wrap:wrap;
+}
+
+.search-box input{
+    width:170px;
+}
+
+}
+
+@media(max-width:768px){
+
+.stats-card{
+    height:auto;
+}
+
+.search-box{
+    width:100%;
+}
+
+.search-box input{
+    width:100%;
+}
+
+}

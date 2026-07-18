@@ -1,0 +1,138 @@
+/* ==========================================
+   GOOGLE FONT
+========================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:#f5f7fb;
+    color:#1e293b;
+    overflow-x:hidden;
+}
+
+/* ===========================
+   SIDEBAR
+=========================== */
+
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:250px;
+    height:100vh;
+    background:#111827;
+    padding:30px 20px;
+    overflow-y:auto;
+    z-index:999;
+}
+
+.logo{
+    color:#fff;
+    font-size:28px;
+    font-weight:700;
+    margin-bottom:40px;
+}
+
+.logo i{
+    color:#4f8cff;
+    margin-right:8px;
+}
+
+.sidebar a{
+    display:block;
+    color:#d1d5db;
+    text-decoration:none;
+    padding:14px 18px;
+    margin-bottom:10px;
+    border-radius:12px;
+    transition:.3s;
+    font-weight:500;
+}
+
+.sidebar a i{
+    margin-right:12px;
+}
+
+.sidebar a:hover,
+.sidebar a.active{
+    background:#2563eb;
+    color:#fff;
+}
+
+
+/* Main */
+
+.main-content{
+    margin-left:270px;
+    padding:35px;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+/* Cards */
+
+.card{
+    border:none;
+    border-radius:20px;
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.stats-card{
+    padding:30px;
+    color:white;
+    border-radius:20px;
+}
+
+.total-card{
+    background:linear-gradient(135deg,#4f46e5,#3730a3);
+}
+
+.low-card{
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+}
+
+.medium-card{
+    background:linear-gradient(135deg,#f59e0b,#d97706);
+}
+
+.high-card{
+    background:linear-gradient(135deg,#ef4444,#dc2626);
+}
+
+.stats-card h6{
+    font-size:16px;
+}
+
+.stats-card h2{
+    font-size:35px;
+    margin-top:10px;
+}
+
+.stats-card i{
+    font-size:34px;
+    margin-top:10px;
+}
+
+canvas{
+    max-height:340px;
+}
+
+.btn{
+    border-radius:10px;
+}

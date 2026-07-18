@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Analytics | LoanAssist</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/analytics.css') }}">
+
+   <link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+</head>
+
+<body>
+
+<div class="container-fluid">
+
+<div class="row">
+
+<!-- ================= SIDEBAR ================= -->
+
+<div class="col-lg-2 sidebar">
+
+    <h3 class="logo">
+
+        <i class="bi bi-graph-up-arrow"></i>
+
+        LoanAssist
+
+    </h3>
+
+    <a href="{{ url_for('dashboard') }}">
+
+       <i class="bi bi-house-fill"></i>
+
+        Dashboard
+
+    </a>
+
+    <a href="{{ url_for('predict') }}">
+
+        <i class="bi bi-cpu-fill"></i>
+
+        Predict
+
+    </a>
+
+    <a href="{{ url_for('analytics') }}"
+       class="active">
+
+        <i class="bi bi-pie-chart-fill"></i>
+
+        Analytics
+
+    </a>
+
+    <a href="{{ url_for('customers') }}">
+
+        <i class="bi bi-people-fill"></i>
+
+        Customers
+
+    </a>
+
+    <a href="{{ url_for('prediction_analytics') }}">
+
+        <i class="bi bi-bar-chart-fill"></i>
+
+        Prediction Analytics
+
+    </a>
+
+    <a href="{{ url_for('logout') }}">
+
+        <i class="bi bi-box-arrow-right"></i>
+
+        Logout
+
+    </a>
+
+</div>
+
+<!-- ================= MAIN ================= -->
+
+<div class="col-lg-10 main-content">
+
+<div class="page-header">
+
+    <div>
+
+        <h2>
+
+            <i class="bi bi-bar-chart-line-fill"></i>
+
+            Loan Dataset Analytics
+
+        </h2>
+
+        <p>
+
+            Complete statistical analysis of the Loan Repayment Dataset.
+
+        </p>
+
+    </div>
+
+    <a href="{{ url_for('dashboard') }}"
+       class="btn btn-primary">
+
+        <i class="bi bi-arrow-left-circle-fill"></i>
+
+        Dashboard
+
+    </a>
+
+</div>
+
+<!-- ================= KPI CARDS ================= -->
+
+<div class="row">
+
+    <div class="col-lg-3 col-md-6 mb-4">
+
+        <div class="stats-card blue-card">
+
+            <i class="bi bi-database-fill"></i>
+
+            <h6>Total Records</h6>
+
+            <h2>{{ total_customers }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-4">
+
+        <div class="stats-card green-card">
+
+            <i class="bi bi-check-circle-fill"></i>
+
+            <h6>Paid Loans</h6>
+
+            <h2>{{ paid_count }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-4">
+
+        <div class="stats-card red-card">
+
+            <i class="bi bi-x-circle-fill"></i>
+
+            <h6>Default Loans</h6>
+
+            <h2>{{ default_count }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-4">
+
+        <div class="stats-card orange-card">
+
+            <i class="bi bi-percent"></i>
+
+            <h6>Default Rate</h6>
+
+            <h2>{{ default_rate }}%</h2>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-lg-3 col-md-6 mb-4">
+
+        <div class="stats-card purple-card">
+
+            <i class="bi bi-credit-card-2-front-fill"></i>
+
+            <h6>Avg Credit Score</h6>
+
+            <h2>{{ avg_credit }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-4">
+
+        <div class="stats-card cyan-card">
+
+            <i class="bi bi-cash-stack"></i>
+
+            <h6>Avg Loan Amount</h6>
+
+            <h2>₹{{ avg_loan|round|int }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-4">
+
+        <div class="stats-card indigo-card">
+
+            <i class="bi bi-wallet2"></i>
+
+            <h6>Avg Annual Income</h6>
+
+            <h2>₹{{ avg_income|round|int }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-3 col-md-6 mb-4">
+
+        <div class="stats-card yellow-card">
+
+            <i class="bi bi-graph-up-arrow"></i>
+
+            <h6>Avg DTI Ratio</h6>
+
+            <h2>{{ avg_dti }}</h2>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- PART 2 STARTS FROM HERE -->
+ <!-- ================= Row 1 ================= -->
+
+<div class="row">
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="chart-card">
+
+            <h5>
+                <i class="bi bi-pie-chart-fill"></i>
+                Loan Repayment Distribution
+            </h5>
+
+            <img src="{{ url_for('static',
+            filename='images/default_distribution.png') }}"
+            class="img-fluid">
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="chart-card">
+
+            <h5>
+                <i class="bi bi-person-workspace"></i>
+                Employment Status Distribution
+            </h5>
+
+            <img src="{{ url_for('static',
+            filename='images/employment.png') }}"
+            class="img-fluid">
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= Row 2 ================= -->
+
+<div class="row">
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="chart-card">
+
+            <h5>
+                <i class="bi bi-credit-card-fill"></i>
+                Credit Score Distribution
+            </h5>
+
+            <img src="{{ url_for('static',
+            filename='images/credit_score.png') }}"
+            class="img-fluid">
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="chart-card">
+
+            <h5>
+                <i class="bi bi-cash-stack"></i>
+                Loan Amount Distribution
+            </h5>
+
+            <img src="{{ url_for('static',
+            filename='images/loan_amount.png') }}"
+            class="img-fluid">
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= Row 3 ================= -->
+
+<div class="row">
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="chart-card">
+
+            <h5>
+                <i class="bi bi-wallet-fill"></i>
+                Monthly Income Distribution
+            </h5>
+
+            <img src="{{ url_for('static',
+            filename='images/monthly_income.png') }}"
+            class="img-fluid">
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="chart-card">
+
+            <h5>
+                <i class="bi bi-bank"></i>
+                Loan Purpose Analysis
+            </h5>
+
+            <img src="{{ url_for('static',
+            filename='images/loan_purpose.png') }}"
+            class="img-fluid">
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= Row 4 ================= -->
+
+<div class="row">
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="chart-card">
+
+            <h5>
+                <i class="bi bi-gender-ambiguous"></i>
+                Gender Distribution
+            </h5>
+
+            <img src="{{ url_for('static',
+            filename='images/gender.png') }}"
+            class="img-fluid">
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="chart-card">
+
+            <h5>
+                <i class="bi bi-award-fill"></i>
+                Loan Grade Distribution
+            </h5>
+
+            <img src="{{ url_for('static',
+            filename='images/grade.png') }}"
+            class="img-fluid">
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= Row 5 ================= -->
+
+<div class="row">
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="chart-card">
+
+            <h5>
+                <i class="bi bi-bar-chart-steps"></i>
+                Debt To Income Ratio
+            </h5>
+
+            <img src="{{ url_for('static',
+            filename='images/debt_ratio.png') }}"
+            class="img-fluid">
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6 mb-4">
+
+        <div class="chart-card">
+
+            <h5>
+                <i class="bi bi-building-fill"></i>
+                Interest Rate Distribution
+            </h5>
+
+            <img src="{{ url_for('static',
+            filename='images/interest_rate.png') }}"
+            class="img-fluid">
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= Heatmap ================= -->
+
+<div class="chart-card mb-4">
+
+    <h5>
+
+        <i class="bi bi-grid-3x3-gap-fill"></i>
+
+        Correlation Heatmap
+
+    </h5>
+
+    <img src="{{ url_for('static',
+    filename='images/heatmap.png') }}"
+    class="img-fluid">
+
+</div>
+
+<!-- ================= Feature Importance ================= -->
+
+<div class="chart-card mb-5">
+
+    <h5>
+
+        <i class="bi bi-bar-chart-fill"></i>
+
+        Feature Importance
+
+    </h5>
+
+    <img src="{{ url_for('static',
+    filename='images/feature_importance.png') }}"
+    class="img-fluid">
+
+</div>
+
+<!-- PART 3 STARTS HERE -->
+ <!-- ================= AI INSIGHTS ================= -->
+
+<div class="info-card mb-4">
+
+    <h4>
+
+        <i class="bi bi-cpu-fill text-primary"></i>
+
+        AI Insights
+
+    </h4>
+
+    <ul class="mt-4">
+
+        <li>
+            <b>Credit Score</b> is the strongest positive indicator of loan repayment.
+        </li>
+
+        <li>
+            Customers with a higher
+            <b>Debt-to-Income Ratio</b>
+            have significantly higher EMI default probability.
+        </li>
+
+        <li>
+            Previous
+            <b>Delinquency History</b>
+            increases the chance of loan default.
+        </li>
+
+        <li>
+            Higher
+            <b>Interest Rate</b>
+            moderately increases repayment risk.
+        </li>
+
+        <li>
+            Loan Amount alone has relatively
+            <b>low influence</b>
+            on loan repayment.
+        </li>
+
+        <li>
+            Previous repayment behaviour is a
+            <b>stronger predictor</b>
+            than customer age or gender.
+        </li>
+
+    </ul>
+
+</div>
+
+<!-- ================= DATASET SUMMARY ================= -->
+
+<div class="summary-card mb-4">
+
+    <h4>
+
+        <i class="bi bi-database-fill"></i>
+
+        Dataset Summary
+
+    </h4>
+
+    <table class="table table-bordered table-hover mt-4">
+
+        <tbody>
+
+        <tr>
+
+            <th>Dataset Name</th>
+
+            <td>loan_dataset_20000.csv</td>
+
+        </tr>
+
+        <tr>
+
+            <th>Total Records</th>
+
+            <td>{{ total_customers }}</td>
+
+        </tr>
+
+        <tr>
+
+            <th>Total Features</th>
+
+            <td>22</td>
+
+        </tr>
+
+        <tr>
+
+            <th>Target Column</th>
+
+            <td>loan_paid_back</td>
+
+        </tr>
+
+        <tr>
+
+            <th>Machine Learning Algorithm</th>
+
+            <td>Random Forest Classifier</td>
+
+        </tr>
+
+        <tr>
+
+            <th>Prediction Type</th>
+
+            <td>Binary Classification</td>
+
+        </tr>
+
+        <tr>
+
+            <th>Missing Values</th>
+
+            <td>0</td>
+
+        </tr>
+
+        <tr>
+
+            <th>Total Charts</th>
+
+            <td>10+</td>
+
+        </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<!-- ================= FEATURE STATISTICS ================= -->
+
+<div class="summary-card mb-4">
+
+    <h4>
+
+        <i class="bi bi-table"></i>
+
+        Feature Statistics
+
+    </h4>
+
+    <table class="table table-bordered table-hover mt-4">
+
+        <thead class="table-dark">
+
+            <tr>
+
+                <th>Feature</th>
+
+                <th>Average</th>
+
+                <th>Minimum</th>
+
+                <th>Maximum</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+
+            <tr>
+
+                <td>Age</td>
+
+                <td>{{ avg_age }}</td>
+
+                <td>{{ min_age }}</td>
+
+                <td>{{ max_age }}</td>
+
+            </tr>
+
+            <tr>
+
+                <td>Annual Income</td>
+
+                <td>₹ {{ avg_income }}</td>
+
+                <td>₹ {{ min_income }}</td>
+
+                <td>₹ {{ max_income }}</td>
+
+            </tr>
+
+            <tr>
+
+                <td>Monthly Income</td>
+
+                <td>₹ {{ avg_monthly_income }}</td>
+
+                <td>₹ {{ min_monthly_income }}</td>
+
+                <td>₹ {{ max_monthly_income }}</td>
+
+            </tr>
+
+            <tr>
+
+                <td>Credit Score</td>
+
+                <td>{{ avg_credit }}</td>
+
+                <td>{{ min_credit }}</td>
+
+                <td>{{ max_credit }}</td>
+
+            </tr>
+
+            <tr>
+
+                <td>Loan Amount</td>
+
+                <td>₹ {{ avg_loan }}</td>
+
+                <td>₹ {{ min_loan }}</td>
+
+                <td>₹ {{ max_loan }}</td>
+
+            </tr>
+
+            <tr>
+
+                <td>Interest Rate</td>
+
+                <td>{{ avg_interest }}</td>
+
+                <td>{{ min_interest }}</td>
+
+                <td>{{ max_interest }}</td>
+
+            </tr>
+
+            <tr>
+
+                <td>Debt-To-Income Ratio</td>
+
+                <td>{{ avg_dti }}</td>
+
+                <td>{{ min_dti }}</td>
+
+                <td>{{ max_dti }}</td>
+
+            </tr>
+
+            <tr>
+
+                <td>Open Accounts</td>
+
+                <td>{{ avg_accounts }}</td>
+
+                <td>{{ min_accounts }}</td>
+
+                <td>{{ max_accounts }}</td>
+
+            </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
+
+<!-- ================= KEY FINDINGS ================= -->
+
+<div class="info-card mb-4">
+
+    <h4>
+
+        <i class="bi bi-lightbulb-fill text-warning"></i>
+
+        Key Findings
+
+    </h4>
+
+    <div class="row mt-4">
+
+        <div class="col-md-6">
+
+            <ul>
+
+                <li>✔ Credit Score has the highest positive impact on repayment.</li>
+
+                <li>✔ Higher Debt-To-Income Ratio increases EMI default risk.</li>
+
+                <li>✔ Interest Rate negatively affects repayment probability.</li>
+
+                <li>✔ Previous delinquencies increase financial risk.</li>
+
+            </ul>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <ul>
+
+                <li>✔ Income stability improves repayment behaviour.</li>
+
+                <li>✔ Feature Importance identifies the most influential variables.</li>
+
+                <li>✔ Correlation Heatmap shows relationships among numerical features.</li>
+
+                <li>✔ Dataset contains approximately 80% Paid Loans and 20% Defaults.</li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= MODEL INFORMATION ================= -->
+
+<div class="summary-card mb-5">
+
+    <h4>
+
+        <i class="bi bi-cpu-fill"></i>
+
+        Model Information
+
+    </h4>
+
+    <div class="row mt-4">
+
+        <div class="col-md-3">
+
+            <div class="mini-card">
+
+                <i class="bi bi-robot"></i>
+
+                <h6>Algorithm</h6>
+
+                <h5>Random Forest</h5>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="mini-card">
+
+                <i class="bi bi-bullseye"></i>
+
+                <h6>Accuracy</h6>
+
+                <h5>{{ model_accuracy }}%</h5>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="mini-card">
+
+                <i class="bi bi-sliders"></i>
+
+                <h6>Features</h6>
+
+                <p>{{ feature_count }}</p>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="mini-card">
+
+                <i class="bi bi-check-circle-fill"></i>
+
+                <h6>Status</h6>
+
+                <h5 class="text-success">Active</h5>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="text-center mt-5 mb-4">
+
+    <hr>
+
+    <p>
+        <i class="bi bi-shield-check"></i>
+        © 2026 LoanAssist EMI Default Prediction Platform
+
+    </p>
+
+</footer>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
