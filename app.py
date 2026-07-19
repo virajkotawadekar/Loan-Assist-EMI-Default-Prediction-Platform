@@ -64,6 +64,17 @@ if not os.path.exists(PREDICTION_FILE):
         index=False
     )
 
+@app.route("/download_prediction_history")
+def download_prediction_history():
+
+    if "user" not in session:
+        return redirect(url_for("login"))
+
+    return send_file(
+        PREDICTION_FILE,
+        as_attachment=True,
+        download_name="prediction_history.csv"
+    )
 # =====================================
 # Load ML Files
 # =====================================
@@ -151,77 +162,73 @@ def login():
 # =====================================
 
 @app.route("/dashboard")
-
 def dashboard():
 
     if "user" not in session:
+        return redirect(url_for("login"))
 
-        return redirect(
-            url_for("login")
-        )
+    # ==============================
+    # Dataset
+    # ==============================
 
     df = load_data()
 
     total_customers = len(df)
 
-    high_risk = len(
-        df[df["loan_paid_back"] == 0]
-    )
+    default_loans = len(df[df["loan_paid_back"] == 0])
 
-    average_risk = round(
+    paid_loans = len(df[df["loan_paid_back"] == 1])
 
-        (high_risk / total_customers) * 100,
-
+    default_rate = round(
+        (default_loans / total_customers) * 100,
         2
-
     )
 
-    customers = []
+    # ==============================
+    # Prediction History
+    # ==============================
 
-    for i, row in df.head(5).iterrows():
+    if os.path.exists(PREDICTION_FILE):
 
-        score = row["credit_score"]
-
-        if score < 600:
-
-            risk = "High Risk"
-
-        elif score < 750:
-
-            risk = "Medium Risk"
-
-        else:
-
-            risk = "Low Risk"
-
-        customers.append({
-
-            "id": i + 1,
-
-            "name": f"Customer {i+1}",
-
-            "credit": score,
-
-            "risk": risk
-
-        })
-
-    prediction_df = pd.read_csv(PREDICTION_FILE)
-
-    total_predictions = len(prediction_df)
-
-    if total_predictions > 0:
-
-        last_prediction = prediction_df.iloc[-1]["date"]
+        prediction_df = pd.read_csv(PREDICTION_FILE)
 
     else:
 
-        last_prediction = "No Prediction Yet"
+        prediction_df = pd.DataFrame()
 
-    csv_notifications = len([
-        x for x in recent_activity
-        if "CSV" in x
-    ])
+    total_predictions = len(prediction_df)
+
+    # ==============================
+    # Recent Predictions
+    # ==============================
+
+    recent_predictions = []
+
+    if not prediction_df.empty:
+
+        last5 = prediction_df.tail(5).iloc[::-1]
+
+        for _, row in last5.iterrows():
+
+            recent_predictions.append({
+
+            "date": row["date"],
+
+            "prediction": row["prediction"],
+
+            "risk": row["risk"],
+
+            "default_probability": row["default_probability"],
+
+            "paid_probability": row["paid_probability"]
+
+            })
+
+
+
+    # ==============================
+    # Render
+    # ==============================
 
     return render_template(
 
@@ -229,19 +236,17 @@ def dashboard():
 
         total_customers=total_customers,
 
-        high_risk=high_risk,
+        paid_loans=paid_loans,
 
-        average_risk=average_risk,
+        default_loans=default_loans,
 
-        customers=customers,
+        default_rate=default_rate,
 
         total_predictions=total_predictions,
 
-        last_prediction=last_prediction,
+        recent_predictions=recent_predictions,
 
-        recent_activity=recent_activity[-5:],
-
-        csv_notifications=csv_notifications,
+        recent_activity=recent_activity,
 
         model_accuracy=model_accuracy,
 
@@ -249,11 +254,7 @@ def dashboard():
 
         recall=recall,
 
-        f1=f1,
-
-        current_date=pd.Timestamp.now().strftime(
-            "%d-%m-%Y %H:%M"
-        )
+        f1=f1
 
     )
 
@@ -267,38 +268,180 @@ def customers():
     if "user" not in session:
         return redirect(url_for("login"))
 
-    df = load_data()
+    df = load_data().copy()
 
-    search = request.args.get("search", "").lower()
+    # -----------------------------
+    # Filters
+    # -----------------------------
+
+    search = request.args.get("search", "").strip()
+    employment = request.args.get("employment", "")
+    risk_filter = request.args.get("risk", "")
+    grade = request.args.get("grade", "")
+
+    # -----------------------------
+    # Dropdown Values
+    # -----------------------------
+
+    employments = sorted(df["employment_status"].dropna().unique())
+    grades = sorted(df["grade_subgrade"].dropna().unique())
+
+    # -----------------------------
+    # Encode Features
+    # -----------------------------
+
+    df_encoded = df.copy()
+
+    df_encoded["employment_status"] = encoders[
+        "employment_status"
+    ].transform(df_encoded["employment_status"].astype(str))
+
+    df_encoded["grade_subgrade"] = encoders[
+        "grade_subgrade"
+    ].transform(df_encoded["grade_subgrade"].astype(str))
+
+    # -----------------------------
+    # Model Prediction
+    # -----------------------------
+
+    X = df_encoded[features]
+
+    X_scaled = scaler.transform(X)
+
+    probabilities = model.predict_proba(X_scaled)
+
+    predictions = model.predict(X_scaled)
 
     customer_list = []
 
+    # -----------------------------
+    # Create Customer List
+    # -----------------------------
+
     for i, row in df.iterrows():
 
-        score = row["credit_score"]
+        default_probability = round(
+            probabilities[i][0] * 100,
+            2
+        )
 
-        if score < 600:
+        paid_probability = round(
+            probabilities[i][1] * 100,
+            2
+        )
+
+        prediction = (
+            "Loan Will Be Paid"
+            if predictions[i] == 1
+            else "Default"
+        )
+
+        # -----------------------------
+        # Risk Level
+        # -----------------------------
+
+        if default_probability >= 60:
+
             risk = "High Risk"
-        elif score < 750:
+
+        elif default_probability >= 30:
+
             risk = "Medium Risk"
+
         else:
+
             risk = "Low Risk"
 
         customer = {
 
             "id": i + 1,
-            "name": f"Customer {i+1}",
-            "credit": score,
+
+            "employment_status": row["employment_status"],
+
+            "monthly_income": row["monthly_income"],
+
+            "credit_score": row["credit_score"],
+
+            "loan_amount": row["loan_amount"],
+
+            "interest_rate": row["interest_rate"],
+
+            "debt_to_income_ratio": row["debt_to_income_ratio"],
+
+            "grade_subgrade": row["grade_subgrade"],
+
+            "current_balance": row["current_balance"],
+
+            "total_credit_limit": row["total_credit_limit"],
+
+            "num_of_open_accounts": row["num_of_open_accounts"],
+
+            "num_of_delinquencies": row["num_of_delinquencies"],
+
+            "installment": row["installment"],
+
+            "prediction": prediction,
+
+            "default_probability": default_probability,
+
+            "paid_probability": paid_probability,
+
             "risk": risk
 
         }
 
-        if search == "" or search in customer["name"].lower():
-            customer_list.append(customer)
+        # -----------------------------
+        # Search
+        # -----------------------------
+
+        if search:
+
+            if search not in str(customer["id"]):
+
+                continue
+
+        # -----------------------------
+        # Employment Filter
+        # -----------------------------
+
+        if employment:
+
+            if customer["employment_status"] != employment:
+
+                continue
+
+        # -----------------------------
+        # Risk Filter
+        # -----------------------------
+
+        if risk_filter:
+
+            if customer["risk"] != risk_filter:
+
+                continue
+
+        # -----------------------------
+        # Grade Filter
+        # -----------------------------
+
+        if grade:
+
+            if customer["grade_subgrade"] != grade:
+
+                continue
+
+        customer_list.append(customer)
 
     return render_template(
+
         "customers.html",
-        customers=customer_list
+
+        customers=customer_list,
+
+        employments=employments,
+
+        grades=grades
+
     )
 
 # =====================================
@@ -412,14 +555,27 @@ def predict():
             # Risk
             # ==========================
 
-            if default_probability >= 70:
+            if default_probability >= 60:
                 risk = "High Risk"
 
-            elif default_probability >= 40:
+            elif default_probability >= 30:
                 risk = "Medium Risk"
 
             else:
                 risk = "Low Risk"
+            
+
+            prediction = model.predict(input_scaled)[0]
+
+            proba = model.predict_proba(input_scaled)[0]
+
+            print("\n========== MODEL DEBUG ==========")
+            print("Classes :", model.classes_)
+            print("Prediction :", prediction)
+            print("Probability :", proba)
+            print("Default Probability :", proba[0] * 100)
+            print("Paid Probability :", proba[1] * 100)
+            print("=================================\n")
 
             # ==========================
             # Save Prediction History
@@ -460,7 +616,7 @@ def predict():
             # ==========================
             # Return
             # ==========================
-
+            feature_count = len(features)
             return render_template(
 
                 "predict.html",
@@ -472,6 +628,8 @@ def predict():
                 paid_probability=f"{paid_probability:.2f}%",
 
                 risk=risk,
+
+                feature_count=feature_count,
 
                 model_accuracy=model_accuracy
 
@@ -509,7 +667,9 @@ def predict():
 
         prediction=None,
 
-        model_accuracy=model_accuracy
+        model_accuracy=model_accuracy,
+
+        feature_count = len(features)
 
     )
 
@@ -724,6 +884,7 @@ def analytics():
     # ===============================
 
 
+
     total_customers = len(df)
 
     paid_count = len(df[df["loan_paid_back"] == 1])
@@ -775,6 +936,7 @@ def analytics():
     min_accounts = df["num_of_open_accounts"].min()
     max_accounts = df["num_of_open_accounts"].max()
 
+    feature_count = len(features)
     return render_template(
 
         "analytics.html",
@@ -822,7 +984,7 @@ def analytics():
         avg_accounts=avg_accounts,
         min_accounts=min_accounts,
         max_accounts=max_accounts,
-
+        feature_count = feature_count,
         model_accuracy=model_accuracy,
         precision=precision,
         recall=recall,
@@ -849,26 +1011,34 @@ def prediction_analytics():
     if total_predictions > 0:
 
         low_risk = len(
-            prediction_df[
-                prediction_df["risk"] == "Low Risk"
-            ]
+            prediction_df[prediction_df["risk"] == "Low Risk"]
         )
 
         medium_risk = len(
-            prediction_df[
-                prediction_df["risk"] == "Medium Risk"
-            ]
+            prediction_df[prediction_df["risk"] == "Medium Risk"]
         )
 
         high_prediction = len(
-            prediction_df[
-                prediction_df["risk"] == "High Risk"
-            ]
+            prediction_df[prediction_df["risk"] == "High Risk"]
         )
 
         safe_count = low_risk + medium_risk
 
-        prediction_history = prediction_df["date"].tolist()
+        # Day-wise Prediction Count
+        prediction_df["date"] = pd.to_datetime(
+            prediction_df["date"],
+            format="%d-%m-%Y %H:%M"
+        )
+
+        daily_predictions = (
+            prediction_df
+            .groupby(prediction_df["date"].dt.strftime("%d-%m-%Y"))
+            .size()
+            .reset_index(name="count")
+        )
+
+        prediction_dates = daily_predictions["date"].tolist()
+        prediction_counts = daily_predictions["count"].tolist()
 
     else:
 
@@ -876,32 +1046,26 @@ def prediction_analytics():
         medium_risk = 0
         high_prediction = 0
         safe_count = 0
-        prediction_history = []
+
+        prediction_dates = []
+        prediction_counts = []
 
     return render_template(
 
         "prediction_analytics.html",
 
+        prediction_dates=prediction_dates,
+        prediction_counts=prediction_counts,
+
         total_predictions=total_predictions,
-
         low_risk=low_risk,
-
         medium_risk=medium_risk,
-
         high_prediction=high_prediction,
-
         safe_count=safe_count,
 
-        prediction_history=prediction_history,
-
-        feature_count=feature_count,
-
         model_accuracy=model_accuracy,
-
         precision=precision,
-
         recall=recall,
-
         f1=f1
 
     )

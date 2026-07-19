@@ -1,92 +1,111 @@
-/* ===========================
-   Google Font
-=========================== */
-
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
+    font-family:"Segoe UI",sans-serif;
 }
-
-/* ===========================
-   Body
-=========================== */
 
 body{
-
-    background:#f4f7fc;
+    background:#f4f7fb;
     overflow-x:hidden;
-
 }
 
-
-/* ===========================
-   SIDEBAR
-=========================== */
+/* ================= Sidebar ================= */
 
 .sidebar{
+
     position:fixed;
     left:0;
     top:0;
+
     width:250px;
     height:100vh;
-    background:#111827;
-    padding:30px 20px;
+
+    background:#0f172a;
+
+    padding:25px 18px;
+
     overflow-y:auto;
-    z-index:999;
+
+    z-index:1000;
+
 }
 
 .logo{
+
     color:#fff;
-    font-size:28px;
+
+    font-size:24px;
+
     font-weight:700;
-    margin-bottom:40px;
+
+    margin-bottom:35px;
+
 }
 
 .logo i{
-    color:#4f8cff;
+
+    color:#3b82f6;
+
     margin-right:8px;
+
 }
 
 .sidebar a{
+
     display:block;
-    color:#d1d5db;
+
+    color:#cbd5e1;
+
     text-decoration:none;
-    padding:14px 18px;
+
+    padding:13px 16px;
+
+    border-radius:10px;
+
     margin-bottom:10px;
-    border-radius:12px;
+
     transition:.3s;
-    font-weight:500;
+
+    font-size:15px;
+
 }
 
 .sidebar a i{
-    margin-right:12px;
+
+    margin-right:10px;
+
 }
 
-.sidebar a:hover,
-.sidebar a.active{
-    background:#2563eb;
+.sidebar a:hover{
+
+    background:#1e293b;
+
     color:#fff;
+
 }
 
-/* ===========================
-   Main
-=========================== */
+.sidebar .active{
+
+    background:#2563eb;
+
+    color:#fff;
+
+}
+
+/* ================= Main ================= */
 
 .main-content{
 
     margin-left:250px;
 
-    padding:35px;
+    width:calc(100% - 250px);
+
+    padding:30px;
 
 }
 
-/* ===========================
-   Header
-=========================== */
+/* ================= Header ================= */
 
 .page-header{
 
@@ -102,21 +121,77 @@ body{
 
 .page-header h2{
 
-    font-size:34px;
-
     font-weight:700;
 
-    color:#1e293b;
+    color:#111827;
 
 }
 
 .page-header p{
 
-    color:#64748b;
+    color:#6b7280;
 
     margin-top:5px;
 
 }
+
+/* ================= Card ================= */
+
+.card{
+
+    border:none;
+
+    border-radius:16px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+}
+
+.card-header{
+
+    background:#fff;
+
+    border:none;
+
+    font-weight:600;
+
+    padding:18px 25px;
+
+}
+
+/* ================= Filters ================= */
+
+.form-control{
+
+    border-radius:10px;
+
+    height:46px;
+
+    border:1px solid #d1d5db;
+
+}
+
+.form-select{
+
+    border-radius:10px;
+
+    height:46px;
+
+    border:1px solid #d1d5db;
+
+}
+
+.form-control:focus,
+
+.form-select:focus{
+
+    border-color:#2563eb;
+
+    box-shadow:0 0 0 .15rem rgba(37,99,235,.15);
+
+}
+
+/* ================= Buttons ================= */
 
 .btn-primary{
 
@@ -126,9 +201,9 @@ body{
 
     border-radius:10px;
 
-    padding:10px 22px;
+    height:46px;
 
-    transition:.3s;
+    font-weight:600;
 
 }
 
@@ -136,127 +211,93 @@ body{
 
     background:#1d4ed8;
 
-    transform:translateY(-2px);
-
 }
 
-/* ===========================
-   Cards
-=========================== */
+.btn-dark{
 
-.card{
-
-    border:none;
-
-    border-radius:18px;
-
-    background:#fff;
-
-    box-shadow:0 10px 25px rgba(0,0,0,.08);
-
-    animation:fadeUp .6s ease;
-
-}
-
-.card-header{
-
-    background:#fff;
-
-    border-bottom:1px solid #eee;
-
-    padding:18px 25px;
-
-    font-size:20px;
+    border-radius:10px;
 
     font-weight:600;
 
 }
 
-.card-body{
+.btn-dark i,
 
-    padding:25px;
+.btn-primary i{
 
-}
-
-/* ===========================
-   Search
-=========================== */
-
-.form-control{
-
-    border-radius:10px;
-
-    height:48px;
+    margin-right:6px;
 
 }
 
-.input-group .btn{
+/* ================= Table ================= */
 
-    border-radius:10px;
-
-    margin-left:10px;
-
+.table-responsive{
+    width:100%;
+    overflow:hidden;
+    border-radius:12px;
 }
 
-/* ===========================
-   Table
-=========================== */
-
-.table{
-
+table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:auto;
     margin-bottom:0;
-
 }
 
-.table thead{
-
-    background:#2563eb;
-
-    color:white;
-
+thead{
+    background:#0f172a;
 }
 
-.table thead th{
+thead th{
 
-    border:none;
-
-    padding:15px;
-
+    color:#fff;
+    font-size:12px;
     font-weight:600;
+    text-align:center;
+    vertical-align:middle;
 
+    padding:10px 8px;
+
+    white-space:normal;
 }
 
-.table tbody tr{
+tbody td{
+
+    text-align:center;
+    vertical-align:middle;
+
+    font-size:12px;
+
+    padding:8px 6px;
+
+    white-space:normal;
+    word-break:break-word;
+}
+
+tbody tr{
 
     transition:.3s;
 
 }
 
-.table tbody tr:hover{
+tbody tr:hover{
 
-    background:#eef5ff;
-
-    transform:scale(1.01);
+    background:#eef4ff;
 
 }
 
-.table td{
+.table-hover tbody tr:hover{
 
-    padding:15px;
-
-    vertical-align:middle;
+    color:#111827;
 
 }
-
-/* ===========================
-   Badges
-=========================== */
+/* ================= Risk Badges ================= */
 
 .badge{
 
-    padding:8px 14px;
-
     font-size:13px;
+
+    padding:8px 12px;
 
     border-radius:20px;
 
@@ -266,79 +307,103 @@ body{
 
 .bg-success{
 
-    background:#22c55e!important;
+    background:#16a34a !important;
 
 }
 
 .bg-warning{
 
-    background:#facc15!important;
+    background:#facc15 !important;
 
-    color:#000!important;
+    color:#111827 !important;
 
 }
 
 .bg-danger{
 
-    background:#ef4444!important;
+    background:#dc2626 !important;
 
 }
 
-/* ===========================
-   Footer
-=========================== */
+/* ================= Footer ================= */
 
 footer{
 
-    color:#64748b;
+    color:#6b7280;
 
-    padding:20px;
+    padding:25px 0;
 
-}
-
-/* ===========================
-   Animations
-=========================== */
-
-@keyframes fadeUp{
-
-    from{
-
-        opacity:0;
-
-        transform:translateY(35px);
-
-    }
-
-    to{
-
-        opacity:1;
-
-        transform:translateY(0);
-
-    }
+    font-size:14px;
 
 }
 
-/* ===========================
-   Responsive
-=========================== */
+footer hr{
+
+    margin-bottom:15px;
+
+}
+
+/* ================= Card Animation ================= */
+
+.card{
+
+    transition:.3s;
+
+}
+
+.card:hover{
+
+    transform:translateY(-3px);
+
+    box-shadow:0 12px 30px rgba(0,0,0,.10);
+
+}
+
+/* ================= Scrollbar ================= */
+
+::-webkit-scrollbar{
+
+    width:8px;
+
+    height:8px;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#94a3b8;
+
+    border-radius:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+    background:#f1f5f9;
+
+}
+
+/* ================= Responsive ================= */
 
 @media(max-width:992px){
 
 .sidebar{
 
+    position:relative;
+
     width:100%;
 
     height:auto;
-
-    position:relative;
 
 }
 
 .main-content{
 
     margin-left:0;
+
+    width:100%;
+
+    padding:20px;
 
 }
 
@@ -349,6 +414,50 @@ footer{
     align-items:flex-start;
 
     gap:15px;
+
+}
+
+table{
+
+    min-width:1600px;
+
+}
+
+}
+
+@media(max-width:768px){
+
+.page-header h2{
+
+    font-size:24px;
+
+}
+
+.card{
+
+    border-radius:12px;
+
+}
+
+.form-control,
+
+.form-select,
+
+.btn{
+
+    height:44px;
+
+    font-size:14px;
+
+}
+
+thead th,
+
+tbody td{
+
+    font-size:13px;
+
+    padding:10px;
 
 }
 

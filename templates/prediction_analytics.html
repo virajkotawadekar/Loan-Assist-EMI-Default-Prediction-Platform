@@ -185,60 +185,87 @@ Back To Dashboard
 const lowRisk={{low_risk}};
 const mediumRisk={{medium_risk}};
 const highRisk={{high_prediction}};
-const predictionHistory={{prediction_history|tojson}};
+const predictionDates = {{ prediction_dates | tojson }};
+const predictionCounts = {{ prediction_counts | tojson }};
 
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+new Chart(document.getElementById("pieChart"), {
 
-new Chart(document.getElementById("pieChart"),{
+    type: "pie",
 
-type:"pie",
+    data: {
 
-data:{
+        labels: [
 
-labels:["Safe","High Risk"],
+            "Low Risk",
 
-datasets:[{
+            "Medium Risk",
 
-data:[{{safe_count}},highRisk],
+            "High Risk"
 
-backgroundColor:["#22c55e","#ef4444"]
+        ],
 
-}]
+        datasets: [{
 
-}
+            data: [
+
+                lowRisk,
+
+                mediumRisk,
+
+                highRisk
+
+            ],
+
+            backgroundColor: [
+
+                "#22c55e",
+
+                "#f59e0b",
+
+                "#ef4444"
+
+            ]
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+
+                position: "bottom"
+
+            }
+
+        }
+
+    }
 
 });
 
-new Chart(document.getElementById("lineChart"),{
-
-type:"line",
-
-data:{
-
-labels:predictionHistory,
-
-datasets:[{
-
-label:"Predictions",
-
-data:predictionHistory.map((_,i)=>i+1),
-
-borderColor:"#4f46e5",
-
-backgroundColor:"rgba(79,70,229,.2)",
-
-fill:true,
-
-tension:.4
-
-}]
-
-}
-
+new Chart(document.getElementById("lineChart"), {
+    type: "line",
+    data: {
+        labels: predictionDates,
+        datasets: [{
+            label: "Predictions Per Day",
+            data: predictionCounts,
+            borderColor: "#4f46e5",
+            backgroundColor: "rgba(79,70,229,0.2)",
+            fill: true,
+            tension: 0.4
+        }]
+    }
 });
 
 new Chart(document.getElementById("barChart"),{

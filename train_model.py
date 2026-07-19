@@ -92,6 +92,10 @@ X = df[selected_features]
 
 y = df["loan_paid_back"]
 
+print(df["loan_paid_back"].value_counts())
+
+print(df["loan_paid_back"].value_counts(normalize=True) * 100)
+
 print("\nSelected Features")
 
 for col in X.columns:
@@ -141,15 +145,15 @@ print("Testing Records  :", len(X_test))
 
 model = RandomForestClassifier(
 
-    n_estimators=500,
+    n_estimators=300,
 
-    max_depth=18,
+    max_depth=12,
 
-    min_samples_split=4,
+    min_samples_split=5,
 
-    min_samples_leaf=2,
+    min_samples_leaf=8,
 
-    class_weight="balanced",
+    class_weight={0:3,1:1},
 
     random_state=42,
 
@@ -233,6 +237,7 @@ test_accuracy = model.score(
     y_test
 
 )
+
 
 # ==========================================
 # Print Results
@@ -475,3 +480,8 @@ Saved Files
 Training Completed Successfully.
 
 """)
+
+
+print(df["loan_paid_back"].value_counts())
+
+print(df["loan_paid_back"].value_counts(normalize=True)*100)
