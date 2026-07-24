@@ -591,17 +591,41 @@ def predict():
 
             new_row = pd.DataFrame([{
 
-                "date": last_prediction,
+                    "date": last_prediction,
 
-                "prediction": prediction_text,
+                    "employment_status": employment_status,
 
-                "risk": risk,
+                    "debt_to_income_ratio": debt_to_income_ratio,
 
-                "default_probability": f"{default_probability:.2f}%",
+                    "credit_score": credit_score,
 
-                "paid_probability": f"{paid_probability:.2f}%"
+                    "grade_subgrade": grade_subgrade,
 
-            }])
+                    "interest_rate": interest_rate,
+
+                    "current_balance": current_balance,
+
+                    "installment": installment,
+
+                    "total_credit_limit": total_credit_limit,
+
+                    "loan_amount": loan_amount,
+
+                    "monthly_income": monthly_income,
+
+                    "num_of_open_accounts": num_of_open_accounts,
+
+                    "num_of_delinquencies": num_of_delinquencies,
+
+                    "prediction": prediction_text,
+
+                    "risk": risk,
+
+                    "default_probability": f"{default_probability:.2f}%",
+
+                    "paid_probability": f"{paid_probability:.2f}%"
+
+                }])
 
             history = pd.concat(
                 [history, new_row],
@@ -700,173 +724,7 @@ def export_csv():
 
     )
 
-# =====================================
-# PDF Report
-# =====================================
 
-@app.route("/report")
-def report():
-
-    df = load_data()
-
-    total_customers = len(df)
-
-    high_risk = len(
-        df[df["loan_paid_back"] == 0]
-    )
-
-    average_risk = round(
-        (high_risk / total_customers) * 100,
-        2
-    )
-
-    prediction_df = pd.read_csv(
-        PREDICTION_FILE
-    )
-
-    total_predictions = len(
-        prediction_df
-    )
-
-    if total_predictions > 0:
-
-        last_prediction = prediction_df.iloc[-1]["date"]
-
-        low_risk = len(
-            prediction_df[
-                prediction_df["risk"] == "Low Risk"
-            ]
-        )
-
-        medium_risk = len(
-            prediction_df[
-                prediction_df["risk"] == "Medium Risk"
-            ]
-        )
-
-        high_prediction = len(
-            prediction_df[
-                prediction_df["risk"] == "High Risk"
-            ]
-        )
-
-    else:
-
-        last_prediction = "No Prediction Yet"
-
-        low_risk = 0
-        medium_risk = 0
-        high_prediction = 0
-
-    pdf = FPDF()
-
-    pdf.add_page()
-
-    pdf.set_font(
-        "Arial",
-        "B",
-        18
-    )
-
-    pdf.cell(
-        190,
-        12,
-        "LoanAssist EMI Prediction Report",
-        ln=True,
-        align="C"
-    )
-
-    pdf.ln(10)
-
-    pdf.set_font(
-        "Arial",
-        size=12
-    )
-
-    pdf.cell(
-        190,
-        10,
-        f"Total Customers : {total_customers}",
-        ln=True
-    )
-
-    pdf.cell(
-        190,
-        10,
-        f"High Risk Customers : {high_risk}",
-        ln=True
-    )
-
-    pdf.cell(
-        190,
-        10,
-        f"Average Risk : {average_risk}%",
-        ln=True
-    )
-
-    pdf.cell(
-        190,
-        10,
-        f"Predictions Generated : {total_predictions}",
-        ln=True
-    )
-
-    pdf.cell(
-        190,
-        10,
-        f"Last Prediction : {last_prediction}",
-        ln=True
-    )
-
-    pdf.ln(10)
-
-    pdf.set_font(
-        "Arial",
-        "B",
-        14
-    )
-
-    pdf.cell(
-        190,
-        10,
-        "Prediction Summary",
-        ln=True
-    )
-
-    pdf.set_font(
-        "Arial",
-        size=12
-    )
-
-    pdf.cell(
-        190,
-        10,
-        f"Low Risk : {low_risk}",
-        ln=True
-    )
-
-    pdf.cell(
-        190,
-        10,
-        f"Medium Risk : {medium_risk}",
-        ln=True
-    )
-
-    pdf.cell(
-        190,
-        10,
-        f"High Risk : {high_prediction}",
-        ln=True
-    )
-
-    path = "static/reports/report.pdf"
-
-    pdf.output(path)
-
-    return send_file(
-        path,
-        as_attachment=True
-    )
 # =====================================
 # Analytics
 # =====================================
@@ -1084,6 +942,303 @@ def logout():
         url_for("login")
     )
 
+# =====================================
+# PDF Report
+# =====================================
+
+@app.route("/report")
+def report():
+
+    df = load_data()
+
+    total_customers = len(df)
+
+    historical_defaults = len(df[df["loan_paid_back"] == 0])
+
+    default_rate = round(
+        (historical_defaults / total_customers) * 100, 2
+    )
+
+    prediction_df = pd.read_csv(PREDICTION_FILE)
+
+    total_predictions = len(prediction_df)
+
+    if total_predictions > 0:
+
+        last_prediction = prediction_df.iloc[-1]["date"]
+
+        low_risk = len(
+            prediction_df[prediction_df["risk"] == "Low Risk"]
+        )
+
+        medium_risk = len(
+            prediction_df[prediction_df["risk"] == "Medium Risk"]
+        )
+
+        high_risk = len(
+            prediction_df[prediction_df["risk"] == "High Risk"]
+        )
+
+    else:
+
+        last_prediction = "No Prediction Yet"
+
+        low_risk = 0
+        medium_risk = 0
+        high_risk = 0
+
+    # ===========================
+    # Load Model Metrics
+    # ===========================
+
+    with open("model/accuracy.pkl", "rb") as f:
+        accuracy = pickle.load(f)
+
+    with open("model/precision.pkl", "rb") as f:
+        precision = pickle.load(f)
+
+    with open("model/recall.pkl", "rb") as f:
+        recall = pickle.load(f)
+
+    with open("model/f1.pkl", "rb") as f:
+        f1 = pickle.load(f)
+
+    # ===========================
+    # PDF
+    # ===========================
+
+    pdf = FPDF()
+
+    pdf.add_page()
+
+    # Header
+
+    pdf.set_font("Arial", "B", 18)
+
+    pdf.cell(
+        190,
+        12,
+        "LoanAssist EMI Default Prediction Platform",
+        ln=True,
+        align="C"
+    )
+
+    pdf.set_font("Arial", "", 13)
+
+    pdf.cell(
+        190,
+        8,
+        "Prediction Analytics Report",
+        ln=True,
+        align="C"
+    )
+
+    pdf.ln(5)
+
+    pdf.set_font("Arial", "", 11)
+
+    pdf.cell(
+        190,
+        8,
+        f"Generated On : {pd.Timestamp.now().strftime('%d-%m-%Y %I:%M %p')}",
+        ln=True
+    )
+
+    pdf.line(10, 38, 200, 38)
+
+    pdf.ln(6)
+
+    # ===========================
+    # Dataset Summary
+    # ===========================
+
+    pdf.set_font("Arial", "B", 14)
+
+    pdf.cell(
+        190,
+        8,
+        "Dataset Summary",
+        ln=True
+    )
+
+    pdf.set_font("Arial", "", 12)
+
+    pdf.cell(
+        190,
+        8,
+        f"Total Customers : {total_customers}",
+        ln=True
+    )
+
+    pdf.cell(
+        190,
+        8,
+        f"Historical Default Loans : {historical_defaults}",
+        ln=True
+    )
+
+    pdf.cell(
+        190,
+        8,
+        f"Historical Default Rate : {default_rate}%",
+        ln=True
+    )
+
+    pdf.ln(4)
+
+    # ===========================
+    # Model Performance
+    # ===========================
+
+    pdf.set_font("Arial", "B", 14)
+
+    pdf.cell(
+        190,
+        8,
+        "Model Performance",
+        ln=True
+    )
+
+    pdf.set_font("Arial", "", 12)
+
+    pdf.cell(
+        190,
+        8,
+        f"Accuracy : {accuracy}%",
+        ln=True
+    )
+
+    pdf.cell(
+        190,
+        8,
+        f"Precision : {precision}%",
+        ln=True
+    )
+
+    pdf.cell(
+        190,
+        8,
+        f"Recall : {recall}%",
+        ln=True
+    )
+
+    pdf.cell(
+        190,
+        8,
+        f"F1 Score : {f1}%",
+        ln=True
+    )
+
+    pdf.ln(4)
+
+    # ===========================
+    # Prediction Summary
+    # ===========================
+
+    pdf.set_font("Arial", "B", 14)
+
+    pdf.cell(
+        190,
+        8,
+        "Prediction Summary",
+        ln=True
+    )
+
+    pdf.set_font("Arial", "", 12)
+
+    pdf.cell(
+        190,
+        8,
+        f"Total Predictions : {total_predictions}",
+        ln=True
+    )
+
+    pdf.cell(
+        190,
+        8,
+        f"Low Risk : {low_risk}",
+        ln=True
+    )
+
+    pdf.cell(
+        190,
+        8,
+        f"Medium Risk : {medium_risk}",
+        ln=True
+    )
+
+    pdf.cell(
+        190,
+        8,
+        f"High Risk : {high_risk}",
+        ln=True
+    )
+
+    pdf.cell(
+        190,
+        8,
+        f"Last Prediction : {last_prediction}",
+        ln=True
+    )
+
+    pdf.ln(4)
+
+    # ===========================
+    # AI Insights
+    # ===========================
+
+    pdf.set_font("Arial", "B", 14)
+
+    pdf.cell(
+        190,
+        8,
+        "AI Insights",
+        ln=True
+    )
+
+    pdf.set_font("Arial", "", 12)
+
+    pdf.multi_cell(
+        190,
+        8,
+        "- Historical Default Rate : "
+        + str(default_rate)
+        + "%\n"
+        "- Customers with Credit Score below 600 have higher default probability.\n"
+        "- High Risk customers require manual verification.\n"
+        "- Medium Risk customers should be monitored before loan approval.\n"
+        "- Current prediction model provides reliable repayment analysis."
+    )
+
+    pdf.ln(5)
+
+    # ===========================
+    # Footer
+    # ===========================
+
+    pdf.line(10, pdf.get_y(), 200, pdf.get_y())
+
+    pdf.ln(5)
+
+    pdf.set_font("Arial", "I", 10)
+
+    pdf.multi_cell(
+        190,
+        6,
+        "LoanAssist EMI Default Prediction Platform\n"
+        "Internship Project\n"
+        "Developed using Python, Flask, Machine Learning, HTML, CSS, Bootstrap\n"
+        "© 2026"
+    )
+
+    path = "static/reports/report.pdf"
+
+    pdf.output(path)
+
+    return send_file(
+        path,
+        as_attachment=True
+    )
 
 # =====================================
 # Run Flask App
