@@ -8,36 +8,57 @@
     <link rel="stylesheet"
           href="{{ url_for('static', filename='css/login.css') }}">
 
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 
 <body>
 
 <div class="container">
 
-   
+    <!-- Left Section -->
     <div class="left-panel">
+
         <div class="content">
+
             <h1>LoanAssist</h1>
+
             <p>
                 Intelligent EMI Default Prediction Platform
             </p>
 
             <div class="features">
-                <div><i class="fa-solid fa-chart-line"></i> AI Risk Analysis</div>
-                <div><i class="fa-solid fa-users"></i> Customer Insights</div>
-                <div><i class="fa-solid fa-file"></i> Analytics Dashboard</div>
+
+                <div>
+                    <i class="bi bi-graph-up-arrow"></i>
+                    AI Risk Analysis
+                </div>
+
+                <div>
+                    <i class="bi bi-people-fill"></i>
+                    Customer Insights
+                </div>
+
+                <div>
+                    <i class="bi bi-bar-chart-fill"></i>
+                    Analytics Dashboard
+                </div>
+
             </div>
+
         </div>
+
     </div>
 
     <!-- Right Section -->
+
     <div class="right-panel">
 
         <div class="login-card">
 
             <h2>Welcome Back</h2>
+
             <p class="subtitle">
                 Sign in to continue
             </p>
@@ -52,39 +73,60 @@
 
             <form method="POST">
 
-                <div class="input-group">
-                    <i class="fa-solid fa-user"></i>
-                    <input type="text"
-                           name="username"
-                           placeholder="Username"
-                           required>
-                </div>
+                <!-- Username -->
 
                 <div class="input-group">
-                    <i class="fa-solid fa-lock"></i>
-                    <input type="password"
-                           id="password"
-                           name="password"
-                           placeholder="Password"
-                           required>
+
+                    <i class="bi bi-person-fill"></i>
+
+                    <input
+                        type="text"
+                        name="username"
+                        placeholder="Username"
+                        required>
+
+                </div>
+
+                <!-- Password -->
+
+                <div class="input-group">
+
+                    <i class="bi bi-lock-fill"></i>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Password"
+                        required>
 
                     <span class="toggle-password"
                           onclick="togglePassword()">
-                        <i class="fa-solid fa-eye"></i>
+
                     </span>
+
                 </div>
 
                 <div class="options">
+
                     <label>
+
                         <input type="checkbox">
+
                         Remember Me
+
                     </label>
 
                     <a href="#">Forgot Password?</a>
+
                 </div>
 
                 <button type="submit">
+
+                    <i class="bi bi-box-arrow-in-right"></i>
+
                     Login
+
                 </button>
 
             </form>
@@ -96,15 +138,29 @@
 </div>
 
 <script>
+
 function togglePassword() {
+
     let password = document.getElementById("password");
+    let eye = document.getElementById("eyeIcon");
 
     if (password.type === "password") {
+
         password.type = "text";
+
+        eye.classList.remove("bi-eye-fill");
+        eye.classList.add("bi-eye-slash-fill");
+
     } else {
+
         password.type = "password";
+
+        eye.classList.remove("bi-eye-slash-fill");
+        eye.classList.add("bi-eye-fill");
+
     }
 }
+
 </script>
 
 </body>
