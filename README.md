@@ -217,7 +217,7 @@ The customer module allows users to view, search, filter, and analyze customer d
 
 The prediction analytics page provides risk distribution, prediction statistics, and analysis of generated loan predictions.
 
-![Prediction Analytics](screenshots/predictin_result.png)
+![Prediction Analytics](screenshots/prediction_analytics.png)
 
 ---
 
