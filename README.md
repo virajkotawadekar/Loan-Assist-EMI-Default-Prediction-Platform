@@ -167,6 +167,65 @@ The system provides rich visualizations including:
 - ⭐ Feature Importance Analysis
 
 ---
+# 📷 Project Screenshots
+
+The following screenshots demonstrate the major modules and features of the **Loan-Assist EMI Default Prediction Platform**.
+
+---
+
+## 🔐 Login Page
+
+The login module provides admin authentication to access the Loan-Assist prediction system.
+
+![Login Page](screenshots/login.png)
+
+---
+
+## 📊 Dashboard
+
+The dashboard provides a complete overview of loan statistics, customer risk analysis, prediction summary, and model performance metrics.
+
+![Dashboard](screenshots/dashboard.png)
+
+---
+
+## 🤖 EMI Default Prediction
+
+The prediction module allows users to enter customer financial details and predict whether the loan will be paid or may result in default.
+
+![Prediction Page](screenshots/prediction.png)
+
+---
+
+## 📈 Analytics Dashboard
+
+The analytics module displays graphical insights such as loan distribution, customer analysis, repayment trends, and financial patterns.
+
+![Analytics Page](screenshots/analytics.png)
+
+---
+
+## 👥 Customer Management
+
+The customer module allows users to view, search, filter, and analyze customer details based on risk levels and financial information.
+
+![Customers Page](screenshots/customers.png)
+
+---
+
+## 📉 Prediction Analytics
+
+The prediction analytics page provides risk distribution, prediction statistics, and analysis of generated loan predictions.
+
+![Prediction Analytics](screenshots/predictin_result.png)
+
+---
+
+## ✅ Prediction Result
+
+This page displays the final prediction outcome with default probability, paid probability, and customer risk classification.
+
+![Prediction Result](screenshots/prediction_result.png)
 
 ## 📦 Requirements
 
