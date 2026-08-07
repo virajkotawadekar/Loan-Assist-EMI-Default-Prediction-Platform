@@ -78,37 +78,24 @@ The application provides:
 ## 📂 Project Structure
 
 ```text
-LoanAssist/
+Loan-Assist-EMI-Default-Prediction-Platform/
 │
 ├── app.py
 ├── train_model.py
 ├── generate_charts.py
 ├── requirements.txt
-│
+├── README.md
 ├── dataset/
-│   └── loan_dataset_20000.csv
-│
-├── model/
-│   ├── model.pkl
-│   ├── scaler.pkl
-│   ├── encoder.pkl
-│   ├── features.pkl
-│   ├── accuracy.pkl
-│   ├── precision.pkl
-│   ├── recall.pkl
-│   └── f1.pkl
-│
+├── screenshots/
 ├── static/
 │   ├── css/
-│   ├── images/
-│   └── reports/
-│
+│   └── images/
 └── templates/
     ├── login.html
     ├── dashboard.html
-    ├── customers.html
     ├── predict.html
     ├── analytics.html
+    ├── customers.html
     └── prediction_analytics.html
 ```
 
